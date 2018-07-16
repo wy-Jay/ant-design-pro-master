@@ -21,15 +21,6 @@ const menuData = [
         name: '基础表单',
         path: 'basic-form',
       },
-      {
-        name: '分步表单',
-        path: 'step-form',
-      },
-      {
-        name: '高级表单',
-        authority: 'admin',
-        path: 'advanced-form',
-      },
     ],
   },
   {
@@ -40,22 +31,6 @@ const menuData = [
       {
         name: '查询表格',
         path: 'table-list',
-      },
-    ],
-  },
-  {
-    name: '详情页',
-    icon: 'profile',
-    path: 'profile',
-    children: [
-      {
-        name: '基础详情页',
-        path: 'basic',
-      },
-      {
-        name: '高级详情页',
-        path: 'advanced',
-        authority: 'admin',
       },
     ],
   },
