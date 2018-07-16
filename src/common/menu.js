@@ -10,16 +10,6 @@ const menuData = [
         name: '分析页',
         path: 'analysis',
       },
-      {
-        name: '监控页',
-        path: 'monitor',
-      },
-      {
-        name: '工作台',
-        path: 'workplace',
-        // hideInBreadcrumb: true,
-        // hideInMenu: true,
-      },
     ],
   },
   {
@@ -50,32 +40,6 @@ const menuData = [
       {
         name: '查询表格',
         path: 'table-list',
-      },
-      {
-        name: '标准列表',
-        path: 'basic-list',
-      },
-      {
-        name: '卡片列表',
-        path: 'card-list',
-      },
-      {
-        name: '搜索列表',
-        path: 'search',
-        children: [
-          {
-            name: '搜索列表（文章）',
-            path: 'articles',
-          },
-          {
-            name: '搜索列表（项目）',
-            path: 'projects',
-          },
-          {
-            name: '搜索列表（应用）',
-            path: 'applications',
-          },
-        ],
       },
     ],
   },

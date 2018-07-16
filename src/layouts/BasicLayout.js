@@ -9,7 +9,6 @@ import classNames from 'classnames';
 import pathToRegexp from 'path-to-regexp';
 import { enquireScreen, unenquireScreen } from 'enquire-js';
 import GlobalHeader from '../components/GlobalHeader';
-import GlobalFooter from '../components/GlobalFooter';
 import SiderMenu from '../components/SiderMenu';
 import NotFound from '../routes/Exception/404';
 import { getRoutes } from '../utils/utils';
@@ -259,35 +258,6 @@ class BasicLayout extends React.PureComponent {
               <Route render={NotFound} />
             </Switch>
           </Content>
-          <Footer style={{ padding: 0 }}>
-            <GlobalFooter
-              links={[
-                {
-                  key: 'Pro 首页',
-                  title: 'Pro 首页',
-                  href: 'http://pro.ant.design',
-                  blankTarget: true,
-                },
-                {
-                  key: 'github',
-                  title: <Icon type="github" />,
-                  href: 'https://github.com/ant-design/ant-design-pro',
-                  blankTarget: true,
-                },
-                {
-                  key: 'Ant Design',
-                  title: 'Ant Design',
-                  href: 'http://ant.design',
-                  blankTarget: true,
-                },
-              ]}
-              copyright={
-                <Fragment>
-                  Copyright <Icon type="copyright" /> 2018 蚂蚁金服体验技术部出品
-                </Fragment>
-              }
-            />
-          </Footer>
         </Layout>
       </Layout>
     );
