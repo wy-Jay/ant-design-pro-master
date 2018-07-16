@@ -55,21 +55,26 @@ const menuData = [
     path: 'exception',
     children: [
       {
-        name: '403',
-        path: '403',
-      },
-      {
-        name: '404',
-        path: '404',
-      },
-      {
-        name: '500',
-        path: '500',
-      },
-      {
         name: '触发异常',
         path: 'trigger',
         hideInMenu: true,
+      },
+    ],
+  },
+  {
+    name: '权限',
+    icon: 'unlock',
+    path: 'auth',
+    children: [
+      {
+        name: 'admin有权查看',
+        path: 'admin',
+        authority: 'admin',
+      },
+      {
+        name: 'user有权查看',
+        path: 'user',
+        authority: 'user',
       },
     ],
   },
