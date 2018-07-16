@@ -79,6 +79,7 @@ export default function request(url, options) {
     .catch(e => {
       const { dispatch } = store;
       const status = e.name;
+      // 登录失效状态码 改成自己项目的状态码
       if (status === 401) {
         dispatch({
           type: 'login/logout',
