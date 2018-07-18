@@ -1,9 +1,11 @@
 import fetch from 'dva/fetch';
+import { stringify } from 'qs';
 import { notification } from 'antd';
 import { routerRedux } from 'dva/router';
 import store from '../index';
 import { CONTEXT_PATH } from './constant'
 import { getToken} from './tokenUtil'
+
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -21,6 +23,16 @@ const codeMessage = {
   503: '服务不可用，服务器暂时过载或维护。',
   504: '网关超时。',
 };
+const dvaFetch = (url, options) => {
+  const { method = 'get' } = options;
+  const data = options.data || {};
+  let requestUrl = url;
+  data.token = getToken();
+  requestUrl = `${url  }?${ stringify(data)}` ;
+  return fetch(requestUrl, options);
+};
+
+
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
@@ -86,13 +98,9 @@ export default function request(url, options) {
     }
   }
 
-  let requestUrl =  CONTEXT_PATH + url;
+  const requestUrl =  CONTEXT_PATH + url;
 
-  if (url !== '/login') {
-    requestUrl = `${requestUrl}?token=${getToken()}`;
-  }
-
-  return fetch(requestUrl, newOptions)
+  return dvaFetch(requestUrl, newOptions)
     .then(checkStatus)
     .then(response => {
       if (newOptions.method === 'DELETE' || response.status === 204) {

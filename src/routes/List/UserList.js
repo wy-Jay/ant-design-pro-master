@@ -323,7 +323,6 @@ export default class TableList extends PureComponent {
       user: { data },
       loading,
     } = this.props;
-    console.log(data);
     const { selectedRows, modalVisible } = this.state;
 
     const columns = [

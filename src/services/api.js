@@ -5,7 +5,7 @@ import request from '../utils/request';
 export async function queryRule(params) {
   return request('/api/rule', {
     method: 'get',
-    data: params,
+    body: params,
   });
 }
 

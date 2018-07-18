@@ -8,5 +8,7 @@ export async function query(params) {
 }
 
 export async function queryCurrent() {
-  return request('/currentUser');
+  return request('/currentUser',{
+    method: 'get',
+  });
 }
