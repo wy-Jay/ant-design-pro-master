@@ -180,16 +180,20 @@ radarOriginData.forEach(item => {
 });
 
 export const getFakeChartData = {
-  visitData,
-  visitData2,
-  salesData,
-  searchData,
-  offlineData,
-  offlineChartData,
-  salesTypeData,
-  salesTypeDataOnline,
-  salesTypeDataOffline,
-  radarData,
+  data:{
+    visitData,
+    visitData2,
+    salesData,
+    searchData,
+    offlineData,
+    offlineChartData,
+    salesTypeData,
+    salesTypeDataOnline,
+    salesTypeDataOffline,
+    radarData,
+  },
+  errCode:0,
+  msg:"操作成功!",
 };
 
 export default {

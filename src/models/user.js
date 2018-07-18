@@ -1,19 +1,31 @@
 import { query as queryUsers, queryCurrent } from '../services/user';
+import  { DEFAULT_PAGE_SIZE }  from '../utils/constant'
 
 export default {
   namespace: 'user',
 
   state: {
-    list: [],
+    data: {
+      list: [],
+      pagination: {},
+    },
     currentUser: {},
   },
 
   effects: {
-    *fetch(_, { call, put }) {
-      const response = yield call(queryUsers);
+    *fetch({ payload }, { call, put }) {
+      const response = yield call(queryUsers,payload);
+      const data = {
+        list: response.rows,
+        pagination: {
+          total: response.total,
+          pageSize: payload && payload.pageSize ? payload.pageSize : DEFAULT_PAGE_SIZE,
+          current: payload && payload.currentPage? parseInt(payload.currentPage, 10) : 1,
+        },
+      }
       yield put({
         type: 'save',
-        payload: response,
+        payload: data,
       });
     },
     *fetchCurrent(_, { call, put }) {
@@ -29,7 +41,7 @@ export default {
     save(state, action) {
       return {
         ...state,
-        list: action.payload,
+        data: action.payload,
       };
     },
     saveCurrentUser(state, action) {

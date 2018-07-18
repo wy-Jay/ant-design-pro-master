@@ -32,6 +32,10 @@ const menuData = [
         name: '查询表格',
         path: 'table-list',
       },
+      {
+        name: '用户列表demo',
+        path: 'user-list',
+      },
     ],
   },
   {
@@ -72,9 +76,9 @@ const menuData = [
         authority: 'admin',
       },
       {
-        name: 'user有权查看',
+        name: 'admin,user有权查看',
         path: 'user',
-        authority: 'user',
+        authority: ['user','admin'],
       },
     ],
   },

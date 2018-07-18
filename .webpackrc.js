@@ -27,4 +27,10 @@ export default {
   disableDynamicImport: true,
   publicPath: '/',
   hash: true,
+  proxy: {
+    "/ywwl-lottery-web": {
+      target: "http://rap.ywwl.com:8080/mockjsdata/63",
+      changeOrigin: true
+    }
+  }
 };

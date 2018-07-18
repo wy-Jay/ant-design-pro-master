@@ -20,10 +20,13 @@ const proxy = {
       },
     },
     $body: {
-      name: 'Serati Ma',
-      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
-      userid: '00000001',
-      notifyCount: 12,
+      data:{
+        name: '用户名',
+        avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
+        userid: '00000001',
+      },
+      errCode:0,
+      msg:"操作成功!"
     },
   },
   // GET POST 可省略
@@ -71,17 +74,23 @@ const proxy = {
     const { password, userName, type } = req.body;
     if (password === '888888' && userName === 'admin') {
       res.send({
-        status: 'ok',
-        type,
-        currentAuthority: 'admin',
+        data:{
+          token: 'token',
+          currentAuthority: 'admin',
+        },
+        errCode:0,
+        msg:"操作成功!"
       });
       return;
     }
     if (password === '123456' && userName === 'user') {
       res.send({
-        status: 'ok',
-        type,
-        currentAuthority: 'user',
+        data:{
+          token: 'token',
+          currentAuthority: 'user',
+        },
+        errCode:0,
+        msg:"操作成功!"
       });
       return;
     }

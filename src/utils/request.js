@@ -68,6 +68,23 @@ export default function request(url, options) {
     }
   }
 
+  function responseInterceptor({ data, errCode, msg }) {
+    if (errCode === 0) {
+      return data;
+    } else if (errCode === 1000) {
+      // Cookie.removeItem('roles')
+      // Cookie.removeItem('token')
+      // const { dispatch } = store;
+      // dispatch({
+      //   type: 'login/logout',
+      // });
+      // return;
+      alert("登录失效")
+    }
+    throw new Error(msg);
+    // return Promise.reject(new Error(message));
+  }
+
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => {
@@ -76,7 +93,8 @@ export default function request(url, options) {
       }
       return response.json();
     })
-    .catch(e => {
+    .then(responseInterceptor) // 处理业务异常
+    .catch(e => { // 处理请求异常
       const { dispatch } = store;
       const status = e.name;
       // 登录失效状态码 改成自己项目的状态码

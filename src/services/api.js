@@ -50,7 +50,7 @@ export async function queryFakeList(params) {
 }
 
 export async function fakeAccountLogin(params) {
-  return request('/api/login/account', {
+  return request('ywwl-lottery-web/fakeLogin', {
     method: 'POST',
     body: params,
   });
