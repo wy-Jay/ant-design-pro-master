@@ -3,7 +3,10 @@ import request from '../utils/request';
 
 
 export async function queryRule(params) {
-  return request(`/api/rule?${stringify(params)}`);
+  return request('/api/rule', {
+    method: 'get',
+    data: params,
+  });
 }
 
 export async function removeRule(params) {
@@ -50,7 +53,7 @@ export async function queryFakeList(params) {
 }
 
 export async function fakeAccountLogin(params) {
-  return request('ywwl-lottery-web/fakeLogin', {
+  return request('/login', {
     method: 'POST',
     body: params,
   });

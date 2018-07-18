@@ -5,12 +5,6 @@ const menuData = [
     name: 'dashboard',
     icon: 'dashboard',
     path: 'dashboard',
-    children: [
-      {
-        name: '分析页',
-        path: 'analysis',
-      },
-    ],
   },
   {
     name: '表单页',
@@ -28,10 +22,6 @@ const menuData = [
     icon: 'table',
     path: 'list',
     children: [
-      {
-        name: '查询表格',
-        path: 'table-list',
-      },
       {
         name: '用户列表demo',
         path: 'user-list',

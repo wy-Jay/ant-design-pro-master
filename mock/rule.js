@@ -64,12 +64,16 @@ export function getRule(req, res, u) {
   }
 
   const result = {
-    list: dataSource,
-    pagination: {
-      total: dataSource.length,
-      pageSize,
-      current: parseInt(params.currentPage, 10) || 1,
+    data:{
+      list: dataSource,
+      pagination: {
+        total: dataSource.length,
+        pageSize,
+        current: parseInt(params.currentPage, 10) || 1,
+      },
     },
+    errCode:0,
+    msg:"操作成功!",
   };
 
   if (res && res.json) {

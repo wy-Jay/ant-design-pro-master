@@ -2,7 +2,8 @@ import fetch from 'dva/fetch';
 import { notification } from 'antd';
 import { routerRedux } from 'dva/router';
 import store from '../index';
-
+import { CONTEXT_PATH } from './constant'
+import { getToken} from './tokenUtil'
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -33,6 +34,23 @@ function checkStatus(response) {
   error.name = response.status;
   error.response = response;
   throw error;
+}
+
+function responseInterceptor({ data, errCode, msg }) {
+  if (errCode === 0) {
+    return data;
+  } else if (errCode === 1000) {
+    // Cookie.removeItem('roles')
+    // Cookie.removeItem('token')
+    // const { dispatch } = store;
+    // dispatch({
+    //   type: 'login/logout',
+    // });
+    // return;
+    alert("登录失效")
+  }
+  throw new Error(msg);
+  // return Promise.reject(new Error(message));
 }
 
 /**
@@ -68,24 +86,13 @@ export default function request(url, options) {
     }
   }
 
-  function responseInterceptor({ data, errCode, msg }) {
-    if (errCode === 0) {
-      return data;
-    } else if (errCode === 1000) {
-      // Cookie.removeItem('roles')
-      // Cookie.removeItem('token')
-      // const { dispatch } = store;
-      // dispatch({
-      //   type: 'login/logout',
-      // });
-      // return;
-      alert("登录失效")
-    }
-    throw new Error(msg);
-    // return Promise.reject(new Error(message));
+  let requestUrl =  CONTEXT_PATH + url;
+
+  if (url !== '/login') {
+    requestUrl = `${requestUrl}?token=${getToken()}`;
   }
 
-  return fetch(url, newOptions)
+  return fetch(requestUrl, newOptions)
     .then(checkStatus)
     .then(response => {
       if (newOptions.method === 'DELETE' || response.status === 204) {

@@ -86,14 +86,11 @@ export const getRouterData = app => {
     '/user/register-result': {
       component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
     },
-    '/dashboard/analysis': {
-      component: dynamicWrapper(app, ['chart'], () => import('../routes/Dashboard/Analysis')),
+    '/dashboard': {
+      component: dynamicWrapper(app,[], () => import('../routes/Dashboard/Dashboard')),
     },
     '/form/basic-form': {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),
-    },
-    '/list/table-list': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/List/TableList')),
     },
     '/list/user-list': {
       component: dynamicWrapper(app, ['user'], () => import('../routes/List/UserList')),
