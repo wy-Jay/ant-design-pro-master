@@ -2,7 +2,7 @@ import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
 import { fakeAccountLogin } from '../services/api';
 import { setAuthority } from '../utils/authority';
-import { setToken } from '../utils/tokenUtil';
+import Cookie from '../utils/cookie';
 import { reloadAuthorized } from '../utils/Authorized';
 import { getPageQuery } from '../utils/utils';
 
@@ -22,6 +22,7 @@ export default {
       });
       // Login successfully
       reloadAuthorized();
+      Cookie.setItem('token', response.token);
       const urlParams = new URL(window.location.href);
       const params = getPageQuery();
       let { redirect } = params;
@@ -48,6 +49,7 @@ export default {
         },
       });
       reloadAuthorized();
+      Cookie.removeItem('token');
       yield put(
         routerRedux.push({
           pathname: '/user/login',
@@ -62,7 +64,6 @@ export default {
   reducers: {
     changeLoginStatus(state, { payload }) {
       setAuthority(payload.currentAuthority);
-      setToken(payload.token);
       return {
         ...state,
         status: payload.status,

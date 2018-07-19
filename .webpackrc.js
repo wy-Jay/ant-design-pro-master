@@ -29,7 +29,8 @@ export default {
   hash: true,
   proxy: {
     "/ywwl-lottery-web": {
-      target: "http://rap.ywwl.com:8080/mockjsdata/63",
+      target: "http://rap.ywwl.com:8080/mockjsdata/63",  //rap
+      // target: "http://localhost:8080",  //local
       changeOrigin: true
     }
   }

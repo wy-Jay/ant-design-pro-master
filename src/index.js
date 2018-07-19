@@ -1,4 +1,5 @@
 import './polyfill';
+import { message } from 'antd';
 import dva from 'dva';
 
 import createHistory from 'history/createHashHistory';
@@ -12,6 +13,10 @@ import './index.less';
 // 1. Initialize
 const app = dva({
   history: createHistory(),
+  onError(err) {
+    const errorMsg = err.message;
+    message.error(errorMsg)
+  },
 });
 
 // 2. Plugins

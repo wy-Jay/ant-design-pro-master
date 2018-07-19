@@ -1,49 +1,54 @@
-import fetch from 'dva/fetch';
-import { stringify } from 'qs';
-import { notification } from 'antd';
-import { routerRedux } from 'dva/router';
+import axios from 'axios';
+import { CONTEXT_PATH } from './constant';
+import Cookie from './cookie';
 import store from '../index';
-import { CONTEXT_PATH } from './constant'
-import { getToken} from './tokenUtil'
 
-const codeMessage = {
-  200: '服务器成功返回请求的数据。',
-  201: '新建或修改数据成功。',
-  202: '一个请求已经进入后台排队（异步任务）。',
-  204: '删除数据成功。',
-  400: '发出的请求有错误，服务器没有进行新建或修改数据的操作。',
-  401: '用户没有权限（令牌、用户名、密码错误）。',
-  403: '用户得到授权，但是访问是被禁止的。',
-  404: '发出的请求针对的是不存在的记录，服务器没有进行操作。',
-  406: '请求的格式不可得。',
-  410: '请求的资源被永久删除，且不会再得到的。',
-  422: '当创建一个对象时，发生一个验证错误。',
-  500: '服务器发生错误，请检查服务器。',
-  502: '网关错误。',
-  503: '服务不可用，服务器暂时过载或维护。',
-  504: '网关超时。',
+
+axios.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
+// axios.defaults.headers.post.token = Cookie.getItem('token');
+// axios.defaults.headers.common.Authorization = Cookie.getItem('token')
+
+const fetch = (url, options) => {
+  const { method = 'get', data } = options;
+  switch (method.toLowerCase()) {
+    case 'get':
+      return axios.get(url, { params: data });
+    case 'delete':
+      return axios.delete(url, { data });
+    case 'head':
+      return axios.head(url, data);
+    case 'post':
+      return axios.post(url, JSON.stringify(data));
+    case 'patch':
+      return axios.patch(url, data);
+    default:
+      return axios(options);
+  }
 };
-const dvaFetch = (url, options) => {
-  const { method = 'get' } = options;
-  const data = options.data || {};
-  let requestUrl = url;
-  data.token = getToken();
-  requestUrl = `${url  }?${ stringify(data)}` ;
-  return fetch(requestUrl, options);
-};
+
+export function get(url, options) {
+  return request(url, { ...options, method: 'get' });
+}
+
+export function post(url, options) {
+  return request(url, { ...options, method: 'post' });
+}
+
+export function put(url, options) {
+  return request(url, { ...options, method: 'put' });
+}
+
+export function deleted(url, options) {
+  return request(url, { ...options, method: 'deleted' });
+}
 
 
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
-  const errortext = codeMessage[response.status] || response.statusText;
-  notification.error({
-    message: `请求错误 ${response.status}: ${response.url}`,
-    description: errortext,
-  });
-  const error = new Error(errortext);
-  error.name = response.status;
+
+  const error = new Error(response.statusText);
   error.response = response;
   throw error;
 }
@@ -52,17 +57,13 @@ function responseInterceptor({ data, errCode, msg }) {
   if (errCode === 0) {
     return data;
   } else if (errCode === 1000) {
-    // Cookie.removeItem('roles')
-    // Cookie.removeItem('token')
-    // const { dispatch } = store;
-    // dispatch({
-    //   type: 'login/logout',
-    // });
-    // return;
-    alert("登录失效")
+    Cookie.removeItem('token');
+    const { dispatch } = store;
+    dispatch({
+      type: 'login/logout',
+    });
   }
   throw new Error(msg);
-  // return Promise.reject(new Error(message));
 }
 
 /**
@@ -73,62 +74,20 @@ function responseInterceptor({ data, errCode, msg }) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, options) {
-  const defaultOptions = {
-    credentials: 'include',
-  };
-  const newOptions = { ...defaultOptions, ...options };
-  if (
-    newOptions.method === 'POST' ||
-    newOptions.method === 'PUT' ||
-    newOptions.method === 'DELETE'
-  ) {
-    if (!(newOptions.body instanceof FormData)) {
-      newOptions.headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json; charset=utf-8',
-        ...newOptions.headers,
-      };
-      newOptions.body = JSON.stringify(newOptions.body);
-    } else {
-      // newOptions.body is FormData
-      newOptions.headers = {
-        Accept: 'application/json',
-        ...newOptions.headers,
-      };
-    }
+  let requestUrl =  CONTEXT_PATH + url;
+
+  if (url !== '/login') {
+    requestUrl = `${requestUrl}?token=${Cookie.getItem('token')}`;
   }
-
-  const requestUrl =  CONTEXT_PATH + url;
-
-  return dvaFetch(requestUrl, newOptions)
+  /**
+   * Do something before send.
+   */
+  return fetch(requestUrl, options)
     .then(checkStatus)
-    .then(response => {
-      if (newOptions.method === 'DELETE' || response.status === 204) {
-        return response.text();
-      }
-      return response.json();
-    })
-    .then(responseInterceptor) // 处理业务异常
-    .catch(e => { // 处理请求异常
-      const { dispatch } = store;
-      const status = e.name;
-      // 登录失效状态码 改成自己项目的状态码
-      if (status === 401) {
-        dispatch({
-          type: 'login/logout',
-        });
-        return;
-      }
-      if (status === 403) {
-        dispatch(routerRedux.push('/exception/403'));
-        return;
-      }
-      if (status <= 504 && status >= 500) {
-        dispatch(routerRedux.push('/exception/500'));
-        return;
-      }
-      if (status >= 404 && status < 422) {
-        dispatch(routerRedux.push('/exception/404'));
-      }
-    });
+    .then(handelData)
+    .then(responseInterceptor)
+}
+
+function handelData(res) {
+  return res.data;
 }
